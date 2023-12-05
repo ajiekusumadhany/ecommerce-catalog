@@ -1,6 +1,7 @@
 <template>
   <div :class="getClassForCategory">
     <div class="background">
+      <div v-if="loading" class="loader"></div>
       <div class="bg-product">
         <div class="unavailable">
           <img src="https://svgur.com/i/10Pi.svg" />
@@ -69,17 +70,20 @@ export default {
       product: {},
       rating: {},
       currentIndex: 1,
+      loading: false,
     };
   },
   methods: {
     async getProductData(index) {
       try {
+        this.loading = true;
         const response = await fetch(
           `https://fakestoreapi.com/products/${index}`
         );
         const data = await response.json();
         this.product = data;
         this.rating = data.rating;
+        this.loading = false;
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
